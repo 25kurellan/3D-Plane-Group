@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Plane Group - App Store</title>
+    <title>Base44 App Hub</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -13,125 +13,117 @@
             --accent: #38bdf8;
             --accent-hover: #0ea5e9;
         }
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-main); min-height: 100vh; padding: 40px 20px; }
+        header { text-align: center; margin-bottom: 40px; }
+        header h1 { font-size: 28px; margin-bottom: 8px; }
+        header p { color: var(--text-muted); font-size: 15px; }
+        
+        /* Grid container for dynamic apps */
+        #app-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        .store-container {
+        
+        .app-card {
             background-color: var(--card-bg);
-            max-width: 450px;
-            width: 100%;
-            border-radius: 24px;
-            padding: 40px 30px;
+            border-radius: 20px;
+            padding: 30px;
             text-align: center;
-            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
         }
         .app-icon {
-            width: 96px;
-            height: 96px;
+            width: 72px; height: 72px;
             background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            border-radius: 22px;
-            margin: 0 auto 20px auto;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 40px;
-            box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.4);
+            border-radius: 18px; margin: 0 auto 16px auto;
+            display: flex; justify-content: center; align-items: center; font-size: 32px;
         }
-        h1 {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            letter-spacing: -0.5px;
-        }
-        .developer {
-            font-size: 14px;
-            color: var(--accent);
-            font-weight: 600;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .description {
-            font-size: 15px;
-            color: var(--text-muted);
-            line-height: 1.6;
-            margin-bottom: 32px;
-        }
+        .app-name { font-size: 20px; font-weight: 700; margin-bottom: 12px; word-break: break-word; }
+        
         .download-btn {
-            display: inline-block;
-            width: 100%;
-            background-color: var(--accent);
-            color: #0f172a;
-            text-decoration: none;
-            padding: 16px;
-            border-radius: 14px;
-            font-weight: 700;
-            font-size: 16px;
-            transition: all 0.2s ease;
-            box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.2);
-            margin-bottom: 32px;
+            display: block; width: 100%; background-color: var(--accent); color: #0f172a;
+            text-decoration: none; padding: 12px; border-radius: 10px; font-weight: 700;
+            margin-bottom: 16px; transition: background 0.2s;
         }
-        .download-btn:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.3);
-        }
-        .qr-section {
-            border-top: 1px solid #334155;
-            padding-top: 24px;
-        }
-        .qr-section p {
-            font-size: 13px;
-            color: var(--text-muted);
-            margin-bottom: 16px;
-        }
-        .qr-code {
-            background-color: #ffffff;
-            padding: 12px;
-            border-radius: 16px;
-            display: inline-block;
-        }
-        .qr-code img {
-            display: block;
-        }
+        .download-btn:hover { background-color: var(--accent-hover); }
+        
+        .qr-code { background: white; padding: 8px; border-radius: 12px; display: inline-block; margin: 0 auto; }
+        .loading { text-align: center; color: var(--text-muted); font-size: 18px; width: 100%; }
     </style>
 </head>
 <body>
 
-    <div class="store-container">
-        
-        <div class="app-icon">✈️</div>
-        <h1>3D Plane Group</h1>
-        <div class="developer">PWA Native Distribution</div>
-        <p class="description">
-            Experience real-time interactive 3D simulations. Download the standalone bundle safely to your device below.
-        </p>
+    <header>
+        <h1>Base44 App Hub</h1>
+        <p>Direct download server for custom native applications</p>
+    </header>
 
-        <!-- Dynamic Action Button -->
-        <a href="https://github.io" class="download-btn">
-            Download App (.APK)
-        </a>
+    <main id="app-grid">
+        <div class="loading">Scanning repository for applications...</div>
+    </main>
 
-        <!-- Desktop QR Handshake Alternative -->
-        <div class="qr-section">
-            <p>Scan with your Android phone's camera to install directly</p>
-            <div class="qr-code">
-                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.io" alt="QR Code Link" width="150" height="150">
-            </div>
-        </div>
-    </div>
+    <script>
+        // CONFIGURATION: Set your specific details here
+        const USER = "25kurellan"; 
+        const REPO = "3D-Plane-Group";
 
+        async function fetchApps() {
+            const grid = document.getElementById('app-grid');
+            try {
+                // Fetch public directory listing from GitHub API
+                const response = await fetch(`https://api.github.com/repos/${USER}/${REPO}/contents/apps`);
+                if (!response.ok) throw new Error("Could not find the apps directory");
+                
+                const files = await response.json();
+                
+                // Clear the loading message
+                grid.innerHTML = "";
+                
+                // Filter only files ending with .apk
+                const apkFiles = files.filter(file => file.name.toLowerCase().endsWith('.apk'));
+                
+                if (apkFiles.length === 0) {
+                    grid.innerHTML = `<div class="loading">No .apk files found in the /apps folder yet.</div>`;
+                    return;
+                }
+
+                // Dynamically build layout elements for every app found
+                apkFiles.forEach(file => {
+                    // Clean up filename underscores/dashes for the readable card title
+                    const readableName = file.name.replace(/\.apk$/i, '').replace(/[_-]/g, ' ');
+                    const downloadUrl = `https://${USER}.github.io/${REPO}/apps/${file.name}`;
+                    const qrUrl = `https://qrserver.com{encodeURIComponent(downloadUrl)}`;
+
+                    const card = document.createElement('div');
+                    card.className = 'app-card';
+                    card.innerHTML = `
+                        <div>
+                            <div class="app-icon">🤖</div>
+                            <div class="app-name">${readableName}</div>
+                        </div>
+                        <div>
+                            <a href="${downloadUrl}" class="download-btn">Download APK</a>
+                            <div class="qr-code">
+                                <img src="${qrUrl}" alt="Scan QR" width="120" height="120">
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+            } catch (error) {
+                grid.innerHTML = `<div class="loading" style="color: #ef4444;">Error mapping directory: ${error.message}</div>`;
+            }
+        }
+
+        // Execute directory scanning on window load
+        fetchApps();
+    </script>
 </body>
 </html>
