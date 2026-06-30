@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Plane Group - App Store</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --accent: #38bdf8;
+            --accent-hover: #0ea5e9;
+        }
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .store-container {
+            background-color: var(--card-bg);
+            max-width: 450px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 40px 30px;
+            text-align: center;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 8px 10px -6px rgb(0 0 0 / 0.3);
+        }
+        .app-icon {
+            width: 96px;
+            height: 96px;
+            background: linear-gradient(135deg, #0ea5e9, #2563eb);
+            border-radius: 22px;
+            margin: 0 auto 20px auto;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 40px;
+            box-shadow: 0 10px 15px -3px rgba(14, 165, 233, 0.4);
+        }
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .developer {
+            font-size: 14px;
+            color: var(--accent);
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .description {
+            font-size: 15px;
+            color: var(--text-muted);
+            line-height: 1.6;
+            margin-bottom: 32px;
+        }
+        .download-btn {
+            display: inline-block;
+            width: 100%;
+            background-color: var(--accent);
+            color: #0f172a;
+            text-decoration: none;
+            padding: 16px;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 6px -1px rgba(56, 189, 248, 0.2);
+            margin-bottom: 32px;
+        }
+        .download-btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.3);
+        }
+        .qr-section {
+            border-top: 1px solid #334155;
+            padding-top: 24px;
+        }
+        .qr-section p {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 16px;
+        }
+        .qr-code {
+            background-color: #ffffff;
+            padding: 12px;
+            border-radius: 16px;
+            display: inline-block;
+        }
+        .qr-code img {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="store-container">
+        
+        <div class="app-icon">✈️</div>
+        <h1>3D Plane Group</h1>
+        <div class="developer">PWA Native Distribution</div>
+        <p class="description">
+            Experience real-time interactive 3D simulations. Download the standalone bundle safely to your device below.
+        </p>
+
+        <!-- Dynamic Action Button -->
+        <a href="https://github.io" class="download-btn">
+            Download App (.APK)
+        </a>
+
+        <!-- Desktop QR Handshake Alternative -->
+        <div class="qr-section">
+            <p>Scan with your Android phone's camera to install directly</p>
+            <div class="qr-code">
+                <img src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://github.io" alt="QR Code Link" width="150" height="150">
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
