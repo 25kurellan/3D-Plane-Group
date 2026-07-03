@@ -183,6 +183,22 @@
       font-size: 12px; 
       width: 120px; 
     }
+    .section-title {
+      font-size: 14px;
+      font-weight: 800;
+      color: var(--accent);
+      margin: 16px 0 8px 0;
+      text-transform: uppercase;
+    }
+    .role-grid {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      background: var(--bg);
+      padding: 6px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+    }
   </style>
 </head>
 <body>
@@ -223,55 +239,92 @@
        onclick="logoutUser()">Exit</button>
     </header>
     <main id="app-grid"></main>
+    
     <section id="admin-panel">
-      <h2 style="font-size: 14px; 
-       margin-bottom: 12px;">Admin</h2>
+      <h2>Admin Control Engine</h2>
+      
+      <div class="section-title">
+        Create New Application</div>
       <div class="admin-row">
-        <p style="font-size: 12px;">
-         Create Account</p>
         <div class="control-group">
-          <input type="email" 
-           id="new-email" 
-           class="admin-input" 
-           placeholder="Email">
-          <input type="text" 
-           id="new-pass" 
-           class="admin-input" 
-           placeholder="Password">
-          <button 
-           onclick="createNewUser()" 
-           class="download-btn" 
-           style="border: none; 
+          <input type="text" id="a-name" 
+           class="admin-input" placeholder="App Name">
+          <input type="text" id="a-tag" 
+           class="admin-input" placeholder="Tag Name">
+          <input type="text" id="a-size" 
+           class="admin-input" placeholder="File Size">
+          <input type="text" id="a-url" 
+           class="admin-input" style="width:100%" 
+           placeholder="Download URL Link">
+          <input type="text" id="a-sum" 
+           class="admin-input" style="width:100%" 
+           placeholder="Short Summary">
+        </div>
+        <p style="font-size:11px; margin-top:4px;">
+         Auto-Clearance Roles:</p>
+        <div class="role-grid" id="a-roles">
+          <label><input type="checkbox" value="Lead"> Lead</label>
+          <label><input type="checkbox" value="Teacher"> Teacher</label>
+          <label><input type="checkbox" value="Developer"> Developer</label>
+          <label><input type="checkbox" value="Member"> Member</label>
+        </div>
+        <button onclick="createNewApp()" 
+         class="download-btn" style="border:none; 
+         cursor:pointer; margin-top:8px; width:100%;">
+         Deploy New Application</button>
+      </div>
+
+      <div class="section-title">
+        Manage Catalog Apps</div>
+      <div id="admin-apps-list"></div>
+
+      <div class="section-title">
+        Provision Accounts</div>
+      <div class="admin-row">
+        <div class="control-group">
+          <input type="email" id="new-email" 
+           class="admin-input" placeholder="Email">
+          <input type="text" id="new-pass" 
+           class="admin-input" placeholder="Password">
+          <button onclick="createNewUser()" 
+           class="download-btn" style="border: none; 
            cursor: pointer;">Add</button>
         </div>
       </div>
+      
+      <div class="section-title">
+        Manage Member Access</div>
       <div id="admin-list"></div>
     </section>
   </div>
-
   <script>
     const ADM_E = "a-person2@outlook.com";
     const ADM_P = "Hello123";
-    const APPS = [
+    
+    // Split URL string to protect the layout container box
+    const LH = "https://github.com";
+    const LN = "25kurellan/";
+    const LR = "3D-Plane-Group/";
+    const LV = "releases/download/v1.0.0/";
+    const LF = "3D-Plane-Group.apk";
+    const FULL_URL = LH + LN + LR + LV + LF;
+    
+    const BASE_APPS = [
       { 
         id: "app1", 
         name: "3D Plane Group", 
         tag: "Production", 
         summary: "Deployment tool.", 
         size: "14.2 MB", 
-        url: "https://github.com", 
-        roles: ["Admin", "Lead", "Developer", "Teacher"] 
-      },
-      { 
-        id: "app2", 
-        name: "Club Operation Center", 
-        tag: "System", 
-        summary: "Admin framework.", 
-        size: "22.1 MB", 
-        url: "https://github.com", 
-        roles: ["Admin", "Lead"] 
+        url: FULL_URL, 
+        roles: ["Admin","Lead","Developer","Teacher"] 
       }
     ];
+
+    if (!localStorage.getItem('db_a')) {
+      localStorage.setItem('db_a', 
+        JSON.stringify(BASE_APPS));
+    }
 
     if (!localStorage.getItem('db_u')) {
       const reg = {};
@@ -312,6 +365,8 @@
       if (!userEmail) return;
       const db = JSON.parse(
         localStorage.getItem('db_u'));
+      const apps = JSON.parse(
+        localStorage.getItem('db_a')) || [];
       const data = db[userEmail];
       
       document.getElementById('auth-screen')
@@ -323,33 +378,36 @@
       
       const grid = document.getElementById('app-grid');
       grid.innerHTML = '';
+      let activeAppCount = 0;
       
-      APPS.forEach(app => {
+      apps.forEach(app => {
         const rClear = app.roles.includes(data.role);
         const oClear = data.overrides && 
           data.overrides.includes(app.id);
         
         if (rClear || oClear) {
+          activeAppCount++;
           const card = document.createElement('div');
           card.className = 'app-card';
           card.innerHTML = 
             '<div class="app-info">' +
             '<div class="app-icon"></div>' +
-            '<div><div class="app-name">' + 
-            app.name + '</div>' +
-            '<div class="app-tag">' + 
-            app.tag + '</div></div></div>' +
-            '<div class="app-summary">' + 
-            app.summary + '</div>' +
+            '<div><div class="app-name">' + app.name + '</div>' +
+            '<div class="app-tag">' + app.tag + '</div></div></div>' +
+            '<div class="app-summary">' + app.summary + '</div>' +
             '<div class="card-footer">' +
-            '<span style="font-size:12px;">' + 
-            app.size + '</span>' +
-            '<a href="' + app.url + '" ' +
-            'class="download-btn">Install</a>' +
+            '<span style="font-size:12px;">' + app.size + '</span>' +
+            '<a href="' + app.url + '" class="download-btn">Install</a>' +
             '</div>';
           grid.appendChild(card);
         }
       });
+
+      if (activeAppCount === 0) {
+        grid.innerHTML = '<p style="text-align:center;' +
+          'color:var(--text-muted);font-size:13px;padding:16px;">' +
+          'No resources mapped.</p>';
+      }
 
       if (data.role === 'Admin') {
         document.getElementById('admin-panel')
@@ -360,25 +418,102 @@
           .style.display = 'none';
       }
     }
+    function createNewApp() {
+      const name = document.getElementById('a-name').value.trim();
+      const tag = document.getElementById('a-tag').value.trim();
+      const size = document.getElementById('a-size').value.trim();
+      const url = document.getElementById('a-url').value.trim();
+      const summary = document.getElementById('a-sum').value.trim();
+      
+      if(!name || !url) { alert("Fields required!"); return; }
+      
+      const checkedRoles = ["Admin"];
+      document.querySelectorAll('#a-roles input:checked')
+        .forEach(cb => { checkedRoles.push(cb.value); });
+
+      let apps = JSON.parse(localStorage.getItem('db_a')) || [];
+      const newApp = {
+        id: "app_" + Date.now(),
+        name: name,
+        tag: tag || "Utility",
+        summary: summary || "No description.",
+        size: size || "Unknown",
+        url: url,
+        roles: checkedRoles
+      };
+
+      apps.push(newApp);
+      localStorage.setItem('db_a', JSON.stringify(apps));
+      
+      document.getElementById('a-name').value = '';
+      document.getElementById('a-tag').value = '';
+      document.getElementById('a-size').value = '';
+      document.getElementById('a-url').value = '';
+      document.getElementById('a-sum').value = '';
+      document.querySelectorAll('#a-roles input')
+        .forEach(cb => cb.checked = false);
+      
+      renderAdmin();
+      loadDash();
+    }
+
+    function deleteApp(appId) {
+      if(!confirm("Delete app?")) return;
+      let apps = JSON.parse(localStorage.getItem('db_a')) || [];
+      apps = apps.filter(a => a.id !== appId);
+      localStorage.setItem('db_a', JSON.stringify(apps));
+      renderAdmin();
+      loadDash();
+    }
+
+    function editAppInline(appId, field, value) {
+      let apps = JSON.parse(localStorage.getItem('db_a')) || [];
+      const idx = apps.findIndex(a => a.id === appId);
+      if(idx !== -1 && value.trim()) {
+        apps[idx][field] = value;
+        localStorage.setItem('db_a', JSON.stringify(apps));
+      }
+    }
 
     function renderAdmin() {
-      const db = JSON.parse(
-        localStorage.getItem('db_u'));
+      const db = JSON.parse(localStorage.getItem('db_u'));
+      const apps = JSON.parse(localStorage.getItem('db_a')) || [];
       const list = document.getElementById('admin-list');
+      const appsList = document.getElementById('admin-apps-list');
+      
       list.innerHTML = '';
+      appsList.innerHTML = '';
 
-      // Admin Password Change
+      apps.forEach(app => {
+        const row = document.createElement('div');
+        row.className = 'admin-row';
+        row.innerHTML = 
+          '<span style="font-size:12px;font-weight:700;' +
+          'color:var(--accent);">' + app.name + '</span>' +
+          '<div class="control-group" style="margin-top:4px;">' +
+          '<input type="text" class="admin-input" value="' + app.name + '" ' +
+          'onchange="editAppInline(\''+app.id+'\',\'name\',this.value)">' +
+          '<input type="text" class="admin-input" value="' + app.tag + '" ' +
+          'onchange="editAppInline(\''+app.id+'\',\'tag\',this.value)">' +
+          '<input type="text" class="admin-input" value="' + app.size + '" ' +
+          'onchange="editAppInline(\''+app.id+'\',\'size\',this.value)">' +
+          '<input type="text" class="admin-input" style="width:100%;" ' +
+          'value="' + app.url + '" onchange="editAppInline(\''+app.id+'\',\'url\',this.value)">' +
+          '<button onclick="deleteApp(\''+app.id+'\')" class="download-btn" ' +
+          'style="background:var(--danger);border:none;cursor:pointer;">Delete</button>' +
+          '</div>';
+        appsList.appendChild(row);
+      });
+
       const selfBox = document.createElement('div');
       selfBox.className = 'admin-row';
       selfBox.innerHTML = 
-        '<p style="font-size:12px;">Admin Password</p>' +
+        '<p style="font-size:12px;">Admin Root Password</p>' +
         '<div class="control-group">' +
-        '<input type="text" id="self-pw" ' +
-        'class="admin-input" value="' + 
-        db[userEmail].password + '">' +
-        '<button onclick="updateSelfPw()" ' +
-        'class="download-btn" style="border:none; ' +
-        'cursor:pointer;">Update</button></div>';
+        '<input type="text" id="self-pw" class="admin-input" ' +
+        'value="' + db[userEmail].password + '">' +
+        '<button onclick="updateSelfPw()" class="download-btn" ' +
+        'style="border:none; cursor:pointer;">Update</button></div>';
       list.appendChild(selfBox);
 
       Object.keys(db).forEach(em => {
@@ -406,8 +541,7 @@
         sel.className = 'admin-select';
         sel.style.width = 'auto';
         sel.style.padding = '4px';
-        ["Member", "Developer", "Teacher", 
-         "Lead", "Admin"].forEach(r => {
+        ["Member", "Developer", "Teacher", "Lead", "Admin"].forEach(r => {
           const opt = document.createElement('option');
           opt.value = r; opt.innerText = r;
           if(db[em].role === r) opt.selected = true;
@@ -417,16 +551,15 @@
           updateUserRole(em, e.target.value));
         grp.appendChild(sel);
 
-        APPS.forEach(app => {
+        apps.forEach(app => {
           const isCheck = db[em].overrides && 
             db[em].overrides.includes(app.id);
           const cBox = document.createElement('label');
           cBox.style.fontSize = '11px';
           cBox.innerHTML = '<input type="checkbox" ' + 
             (isCheck ? 'checked' : '') + '> ' + 
-            app.name.substring(0,3);
-          cBox.querySelector('input')
-            .addEventListener('change', (e) => 
+            app.name.substring(0,4);
+          cBox.querySelector('input').addEventListener('change', (e) => 
             toggleOverride(em, app.id, e.target.checked));
           grp.appendChild(cBox);
         });
@@ -439,8 +572,7 @@
     function updateSelfPw() {
       const p = document.getElementById('self-pw').value;
       if(!p.trim()) return;
-      let db = JSON.parse(
-        localStorage.getItem('db_u'));
+      let db = JSON.parse(localStorage.getItem('db_u'));
       db[userEmail].password = p;
       localStorage.setItem('db_u', JSON.stringify(db));
       alert("Updated.");
@@ -450,17 +582,11 @@
     function createNewUser() {
       const em = document.getElementById('new-email')
         .value.trim().toLowerCase();
-      const pw = document.getElementById('new-pass')
-        .value;
+      const pw = document.getElementById('new-pass').value;
       if(!em || !pw) return;
-      let db = JSON.parse(
-        localStorage.getItem('db_u'));
+      let db = JSON.parse(localStorage.getItem('db_u'));
       if(db[em]) { alert("Exists."); return; }
-      db[em] = { 
-        password: pw, 
-        role: "Member", 
-        overrides: [] 
-      };
+      db[em] = { password: pw, role: "Member", overrides: [] };
       localStorage.setItem('db_u', JSON.stringify(db));
       document.getElementById('new-email').value = '';
       document.getElementById('new-pass').value = '';
@@ -469,15 +595,13 @@
 
     function updateUserPw(em, p) {
       if(!p.trim()) return;
-      let db = JSON.parse(
-        localStorage.getItem('db_u'));
+      let db = JSON.parse(localStorage.getItem('db_u'));
       db[em].password = p;
       localStorage.setItem('db_u', JSON.stringify(db));
     }
 
     function updateUserRole(em, r) {
-      let db = JSON.parse(
-        localStorage.getItem('db_u'));
+      let db = JSON.parse(localStorage.getItem('db_u'));
       db[em].role = r;
       localStorage.setItem('db_u', JSON.stringify(db));
       renderAdmin();
@@ -485,15 +609,12 @@
     }
 
     function toggleOverride(em, id, add) {
-      let db = JSON.parse(
-        localStorage.getItem('db_u'));
+      let db = JSON.parse(localStorage.getItem('db_u'));
       if (!db[em].overrides) db[em].overrides = [];
       if (add) {
-        if (!db[em].overrides.includes(id)) 
-          db[em].overrides.push(id);
+        if (!db[em].overrides.includes(id)) db[em].overrides.push(id);
       } else {
-        db[em].overrides = db[em].overrides
-          .filter(i => i !== id);
+        db[em].overrides = db[em].overrides.filter(i => i !== id);
       }
       localStorage.setItem('db_u', JSON.stringify(db));
       renderAdmin();
@@ -502,10 +623,8 @@
 
     function logoutUser() {
       userEmail = null;
-      document.getElementById('auth-screen')
-        .style.display = 'block';
-      document.getElementById('main-store')
-        .style.display = 'none';
+      document.getElementById('auth-screen').style.display = 'block';
+      document.getElementById('main-store').style.display = 'none';
     }
   </script>
 </body>
