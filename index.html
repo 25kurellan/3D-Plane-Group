@@ -1,105 +1,512 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Plane Group - App Store</title>
-    <style>
-        :root {
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --accent: #38bdf8;
-            --accent-hover: #0ea5e9;
-        }
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            font-family: system-ui, -apple-system, sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-        }
-        body { 
-            background-color: var(--bg-color); 
-            color: var(--text-main); 
-            min-height: 100vh; 
-            padding: 16px;
-        }
-        
-        #app-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
-        .app-card {
-            background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-        }
-        .app-info {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            flex: 1;
-            min-width: 0;
-        }
-        .app-icon {
-            width: 48px; 
-            height: 48px;
-            background: linear-gradient(135deg, #0ea5e9, #2563eb);
-            border-radius: 12px; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            font-size: 24px;
-            flex-shrink: 0;
-        }
-        .app-name { 
-            font-size: 16px; 
-            font-weight: 600; 
-            color: var(--text-main);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        
-        .download-btn {
-            background-color: var(--accent); 
-            color: #0f172a;
-            text-decoration: none; 
-            padding: 10px 18px; 
-            border-radius: 10px; 
-            font-weight: 700;
-            font-size: 14px; 
-            transition: background 0.2s;
-            flex-shrink: 0;
-        }
-        .download-btn:hover { background-color: var(--accent-hover); }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" 
+   content="width=device-width, 
+   initial-scale=1.0">
+  <title>Repository</title>
+  <style>
+    :root {
+      --bg: #0b0f19;
+      --surface: #111827;
+      --hover: #1f2937;
+      --panel: #1e1b4b;
+      --border: #374151;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --accent: #38bdf8;
+      --danger: #ef4444;
+    }
+    * { 
+      box-sizing: border-box; 
+      margin: 0; 
+      padding: 0; 
+      font-family: system-ui, 
+        sans-serif; 
+    }
+    body { 
+      background-color: var(--bg); 
+      color: var(--text); 
+      padding: 24px 16px; 
+    }
+    .container { 
+      max-width: 500px; 
+      margin: 0 auto; 
+      display: none; 
+    }
+    #auth-screen { 
+      max-width: 400px; 
+      margin: 40px auto; 
+      background: var(--surface); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 24px; 
+    }
+    .form-group { 
+      margin-bottom: 16px; 
+    }
+    .form-group label { 
+      display: block; 
+      font-size: 11px; 
+      font-weight: 700; 
+      color: var(--muted); 
+      margin-bottom: 4px; 
+      text-transform: uppercase; 
+    }
+    .form-input, .admin-select { 
+      width: 100%; 
+      background: var(--bg); 
+      border: 1px solid var(--border); 
+      color: var(--text); 
+      padding: 10px; 
+      border-radius: 6px; 
+      font-size: 14px; 
+      outline: none; 
+    }
+    .auth-btn { 
+      width: 100%; 
+      background: var(--accent); 
+      color: #0f172a; 
+      border: none; 
+      padding: 10px; 
+      border-radius: 6px; 
+      font-weight: 700; 
+      cursor: pointer; 
+    }
+    #error-msg { 
+      font-size: 13px; 
+      text-align: center; 
+      margin-top: 12px; 
+      display: none; 
+      color: var(--danger); 
+    }
+    header { 
+      margin-bottom: 24px; 
+      display: flex; 
+      justify-content: 
+        space-between; 
+      align-items: center; 
+    }
+    .logout-btn { 
+      background: none; 
+      border: 1px solid var(--border); 
+      color: var(--muted); 
+      padding: 6px 12px; 
+      border-radius: 6px; 
+      font-size: 12px; 
+      cursor: pointer; 
+    }
+    #app-grid { 
+      display: flex; 
+      flex-direction: column; 
+      gap: 16px; 
+    }
+    .app-card { 
+      background: var(--surface); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 16px; 
+    }
+    .app-info { 
+      display: flex; 
+      align-items: center; 
+      gap: 12px; 
+      margin-bottom: 12px;
+    }
+    .app-icon { 
+      width: 40px; 
+      height: 40px; 
+      background: #1e293b; 
+      border: 1px solid var(--border); 
+      border-radius: 8px; 
+    }
+    .app-name { 
+      font-size: 15px; 
+      font-weight: 700; 
+    }
+    .app-tag { 
+      font-size: 10px; 
+      color: var(--accent); 
+      font-weight: 700; 
+    }
+    .app-summary { 
+      font-size: 13px; 
+      color: var(--muted); 
+      line-height: 1.4; 
+      margin-bottom: 12px;
+    }
+    .card-footer { 
+      display: flex; 
+      align-items: center; 
+      justify-content: 
+        space-between; 
+    }
+    .download-btn { 
+      background: var(--accent); 
+      color: #0f172a; 
+      text-decoration: none; 
+      padding: 6px 14px; 
+      border-radius: 6px; 
+      font-weight: 700; 
+      font-size: 12px; 
+    }
+    #admin-panel { 
+      display: none; 
+      background: var(--panel); 
+      border: 1px solid var(--border); 
+      border-radius: 12px; 
+      padding: 16px; 
+      margin-top: 24px; 
+    }
+    .admin-row { 
+      display: flex; 
+      flex-direction: column; 
+      border-bottom: 1px solid 
+        rgba(255,255,255,0.1); 
+      padding-bottom: 12px; 
+      margin-bottom: 12px; 
+      gap: 6px; 
+    }
+    .control-group { 
+      display: flex; 
+      gap: 6px; 
+      align-items: center; 
+      flex-wrap: wrap; 
+    }
+    .admin-input { 
+      background: var(--bg); 
+      border: 1px solid var(--border); 
+      color: var(--text); 
+      padding: 6px; 
+      border-radius: 4px; 
+      font-size: 12px; 
+      width: 120px; 
+    }
+  </style>
 </head>
 <body>
+  <div id="auth-screen">
+    <div class="auth-header">
+      <h2>Gate Login</h2>
+    </div>
+    <form id="auth-form" 
+     onsubmit="handleAuthSubmit(event)">
+      <div class="form-group">
+        <label>Email</label>
+        <input type="email" 
+         id="email" 
+         class="form-input" 
+         required>
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" 
+         id="password" 
+         class="form-input" 
+         required>
+      </div>
+      <button type="submit" 
+       class="auth-btn">Sign In</button>
+    </form>
+    <div id="error-msg"></div>
+  </div>
 
-    <main id="app-grid">
-
-        <!-- APP ROW: 3D Plane Group -->
-             <!-- APP ROW: 3D Plane Group -->
-        <div class="app-card">
-            <div class="app-info">
-                <div class="app-icon">✈️</div>
-                <div class="app-name">3D Plane Group</div>
-            </div>
-            <a href="https://github.com/25kurellan/3D-Plane-Group/releases/download/v1.0.0/3D%20Plane%20Group.apk" class="download-btn">Install</a>
+  <div class="container" id="main-store">
+    <header>
+      <div>
+        <h1>Directory</h1>
+        <p id="user-display" 
+         style="font-size: 11px;"></p>
+      </div>
+      <button class="logout-btn" 
+       onclick="logoutUser()">Exit</button>
+    </header>
+    <main id="app-grid"></main>
+    <section id="admin-panel">
+      <h2 style="font-size: 14px; 
+       margin-bottom: 12px;">Admin</h2>
+      <div class="admin-row">
+        <p style="font-size: 12px;">
+         Create Account</p>
+        <div class="control-group">
+          <input type="email" 
+           id="new-email" 
+           class="admin-input" 
+           placeholder="Email">
+          <input type="text" 
+           id="new-pass" 
+           class="admin-input" 
+           placeholder="Password">
+          <button 
+           onclick="createNewUser()" 
+           class="download-btn" 
+           style="border: none; 
+           cursor: pointer;">Add</button>
         </div>
+      </div>
+      <div id="admin-list"></div>
+    </section>
+  </div>
 
-    </main>
+  <script>
+    const ADM_E = "a-person2@outlook.com";
+    const ADM_P = "Hello123";
+    const APPS = [
+      { 
+        id: "app1", 
+        name: "3D Plane Group", 
+        tag: "Production", 
+        summary: "Deployment tool.", 
+        size: "14.2 MB", 
+        url: "https://github.com", 
+        roles: ["Admin", "Lead", "Developer", "Teacher"] 
+      },
+      { 
+        id: "app2", 
+        name: "Club Operation Center", 
+        tag: "System", 
+        summary: "Admin framework.", 
+        size: "22.1 MB", 
+        url: "https://github.com", 
+        roles: ["Admin", "Lead"] 
+      }
+    ];
 
+    if (!localStorage.getItem('db_u')) {
+      const reg = {};
+      reg[ADM_E] = { 
+        password: ADM_P, 
+        role: "Admin", 
+        overrides: [] 
+      };
+      localStorage.setItem('db_u', 
+        JSON.stringify(reg));
+    }
+
+    let userEmail = null;
+
+    function handleAuthSubmit(e) {
+      e.preventDefault();
+      const em = document.getElementById('email')
+        .value.trim().toLowerCase();
+      const pw = document.getElementById('password')
+        .value;
+      const err = document.getElementById('error-msg');
+      let db = JSON.parse(
+        localStorage.getItem('db_u')) || {};
+      err.style.display = 'none';
+
+      if (db[em] && db[em].password === pw) {
+        userEmail = em;
+        document.getElementById('email').value = '';
+        document.getElementById('password').value = '';
+        loadDash();
+      } else {
+        err.innerText = "Invalid credentials.";
+        err.style.display = 'block';
+      }
+    }
+
+    function loadDash() {
+      if (!userEmail) return;
+      const db = JSON.parse(
+        localStorage.getItem('db_u'));
+      const data = db[userEmail];
+      
+      document.getElementById('auth-screen')
+        .style.display = 'none';
+      document.getElementById('main-store')
+        .style.display = 'block';
+      document.getElementById('user-display')
+        .innerText = data.role + ": " + userEmail;
+      
+      const grid = document.getElementById('app-grid');
+      grid.innerHTML = '';
+      
+      APPS.forEach(app => {
+        const rClear = app.roles.includes(data.role);
+        const oClear = data.overrides && 
+          data.overrides.includes(app.id);
+        
+        if (rClear || oClear) {
+          const card = document.createElement('div');
+          card.className = 'app-card';
+          card.innerHTML = 
+            '<div class="app-info">' +
+            '<div class="app-icon"></div>' +
+            '<div><div class="app-name">' + 
+            app.name + '</div>' +
+            '<div class="app-tag">' + 
+            app.tag + '</div></div></div>' +
+            '<div class="app-summary">' + 
+            app.summary + '</div>' +
+            '<div class="card-footer">' +
+            '<span style="font-size:12px;">' + 
+            app.size + '</span>' +
+            '<a href="' + app.url + '" ' +
+            'class="download-btn">Install</a>' +
+            '</div>';
+          grid.appendChild(card);
+        }
+      });
+
+      if (data.role === 'Admin') {
+        document.getElementById('admin-panel')
+          .style.display = 'block';
+        renderAdmin();
+      } else {
+        document.getElementById('admin-panel')
+          .style.display = 'none';
+      }
+    }
+
+    function renderAdmin() {
+      const db = JSON.parse(
+        localStorage.getItem('db_u'));
+      const list = document.getElementById('admin-list');
+      list.innerHTML = '';
+
+      // Admin Password Change
+      const selfBox = document.createElement('div');
+      selfBox.className = 'admin-row';
+      selfBox.innerHTML = 
+        '<p style="font-size:12px;">Admin Password</p>' +
+        '<div class="control-group">' +
+        '<input type="text" id="self-pw" ' +
+        'class="admin-input" value="' + 
+        db[userEmail].password + '">' +
+        '<button onclick="updateSelfPw()" ' +
+        'class="download-btn" style="border:none; ' +
+        'cursor:pointer;">Update</button></div>';
+      list.appendChild(selfBox);
+
+      Object.keys(db).forEach(em => {
+        if (em === userEmail) return;
+        const row = document.createElement('div');
+        row.className = 'admin-row';
+        
+        const lbl = document.createElement('span');
+        lbl.className = 'user-label';
+        lbl.innerText = em;
+        row.appendChild(lbl);
+
+        const grp = document.createElement('div');
+        grp.className = 'control-group';
+
+        const pwd = document.createElement('input');
+        pwd.className = 'admin-input';
+        pwd.type = 'text';
+        pwd.value = db[em].password;
+        pwd.addEventListener('input', (e) => 
+          updateUserPw(em, e.target.value));
+        grp.appendChild(pwd);
+
+        const sel = document.createElement('select');
+        sel.className = 'admin-select';
+        sel.style.width = 'auto';
+        sel.style.padding = '4px';
+        ["Member", "Developer", "Teacher", 
+         "Lead", "Admin"].forEach(r => {
+          const opt = document.createElement('option');
+          opt.value = r; opt.innerText = r;
+          if(db[em].role === r) opt.selected = true;
+          sel.appendChild(opt);
+        });
+        sel.addEventListener('change', (e) => 
+          updateUserRole(em, e.target.value));
+        grp.appendChild(sel);
+
+        APPS.forEach(app => {
+          const isCheck = db[em].overrides && 
+            db[em].overrides.includes(app.id);
+          const cBox = document.createElement('label');
+          cBox.style.fontSize = '11px';
+          cBox.innerHTML = '<input type="checkbox" ' + 
+            (isCheck ? 'checked' : '') + '> ' + 
+            app.name.substring(0,3);
+          cBox.querySelector('input')
+            .addEventListener('change', (e) => 
+            toggleOverride(em, app.id, e.target.checked));
+          grp.appendChild(cBox);
+        });
+
+        row.appendChild(grp);
+        list.appendChild(row);
+      });
+    }
+
+    function updateSelfPw() {
+      const p = document.getElementById('self-pw').value;
+      if(!p.trim()) return;
+      let db = JSON.parse(
+        localStorage.getItem('db_u'));
+      db[userEmail].password = p;
+      localStorage.setItem('db_u', JSON.stringify(db));
+      alert("Updated.");
+      renderAdmin();
+    }
+
+    function createNewUser() {
+      const em = document.getElementById('new-email')
+        .value.trim().toLowerCase();
+      const pw = document.getElementById('new-pass')
+        .value;
+      if(!em || !pw) return;
+      let db = JSON.parse(
+        localStorage.getItem('db_u'));
+      if(db[em]) { alert("Exists."); return; }
+      db[em] = { 
+        password: pw, 
+        role: "Member", 
+        overrides: [] 
+      };
+      localStorage.setItem('db_u', JSON.stringify(db));
+      document.getElementById('new-email').value = '';
+      document.getElementById('new-pass').value = '';
+      renderAdmin();
+    }
+
+    function updateUserPw(em, p) {
+      if(!p.trim()) return;
+      let db = JSON.parse(
+        localStorage.getItem('db_u'));
+      db[em].password = p;
+      localStorage.setItem('db_u', JSON.stringify(db));
+    }
+
+    function updateUserRole(em, r) {
+      let db = JSON.parse(
+        localStorage.getItem('db_u'));
+      db[em].role = r;
+      localStorage.setItem('db_u', JSON.stringify(db));
+      renderAdmin();
+      loadDash();
+    }
+
+    function toggleOverride(em, id, add) {
+      let db = JSON.parse(
+        localStorage.getItem('db_u'));
+      if (!db[em].overrides) db[em].overrides = [];
+      if (add) {
+        if (!db[em].overrides.includes(id)) 
+          db[em].overrides.push(id);
+      } else {
+        db[em].overrides = db[em].overrides
+          .filter(i => i !== id);
+      }
+      localStorage.setItem('db_u', JSON.stringify(db));
+      renderAdmin();
+      loadDash();
+    }
+
+    function logoutUser() {
+      userEmail = null;
+      document.getElementById('auth-screen')
+        .style.display = 'block';
+      document.getElementById('main-store')
+        .style.display = 'none';
+    }
+  </script>
 </body>
 </html>
